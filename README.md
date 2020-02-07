@@ -69,13 +69,14 @@ p95 pods: 13.003831951s
 When you're done, and don't need the results anymore, use `kubectl kboom cleanup` to get rid of the run. Note: should you execute the `cleanup` command too soon for `kboom` to terminate all its test pods, you can use `kubectl delete po -l=generator=kboom` to get rid of all orphaned pods.
 
 ## Options
-| Flag  | Description | Default |
-| ------------- | ------------- |
-| --namespace= | set the namespace to deploy to | kboom  |
-| --mode= | how long a pod has to come online before marked as a fail |  scale  |
-| --kboom-image= | The image you want to run that runs testing on pods and launches pods, go code is included in this repo | quay.io/mhausenblas/kboom:2 |
-| --load= | type of kubernetes object and number | pods:1 |
-| --image= | the pod image you want to test at scale | busybox |
+
+| <div style="width:1000px">Flag</div>  | Description | Default |
+| ------------- | ------------- | ------------- |
+| `--namespace=` | namespace | kboom  |
+| `--mode=` | pod timeout before fail |  scale  |
+| `--kboom-image=` | testing and pod launching image | quay.io/mhausenblas/kboom:2 |
+| `--load=` | type of kubernetes object and number | pods:1 |
+| `--image=` | the pod image you want to test at scale | busybox |
 
 ## Known issues and plans
 
