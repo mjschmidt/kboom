@@ -18,13 +18,13 @@ cat <<EOF >> ${tmpdir}/kboom-job.yaml
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: kboom
+  name: kboom$jobname
 spec:
   template:
     spec:
       serviceAccountName: kboom-sa
       containers:
-      - name: kboom
+      - name: kboom$jobname
         image: $kboom_image
         command:
         - "/kboom"
@@ -35,9 +35,9 @@ spec:
       restartPolicy: Never
 EOF
 
-# cat ${tmpdir}/kboom-job.yaml
+cat ${tmpdir}/kboom-job.yaml
 
-kubectl -n $namespace apply -f ${tmpdir}/kboom-job.yaml
+kubectl -n $namespace apply -f ${tmpdir}"/kboom-job.yaml"
 }
 
 
@@ -71,6 +71,9 @@ while [ $# -gt 0 ]; do
     --image=*)
       image="${1#*=}"
       ;;
+    --name=*)
+      jobname="${1#*=}"
+      ;;
   esac
   shift
 done
@@ -78,14 +81,14 @@ done
 
 case $command in
 generate)
-  genload $namespace $mode $load $kboom_image $image
+  genload $namespace $mode $load $kboom_image $image $jobname
   ;;
 results)
-  kubectl -n $namespace logs job/kboom
+  kubectl -n $namespace logs job/kboom$jobname
   ;;
 cleanup)
-  kubectl -n $namespace delete --ignore-not-found job/kboom
-  kubectl -n $namespace delete pods -l generator=kboom
+  kubectl -n $namespace delete --ignore-not-found job/kboom$jobname
+  kubectl -n $namespace delete pods -l generator=kboom$jobname
   ;;
 *)
   printf "The [$COMMAND] command is not supported! Use 'generate' to generate some load, 'results' to view the results, or 'cleanup' to clean up all resources.\n"
